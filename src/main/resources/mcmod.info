@@ -1,0 +1,16 @@
+[
+{
+  "modid": "driedspongestats",
+  "name": "DriedSponge Stats Uploader",
+  "description": "A mod that uploads player stats to an api.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Dried_Sponge"],
+  "credits": "IKD",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
