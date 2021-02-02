@@ -42,7 +42,7 @@ public class StatCommands extends CommandBase {
                     response.getStyle().setBold(true).setColor(TextFormatting.RED);
                 }
             }else{
-                response = new TextComponentString("Please pass an online players name into the second argument!");
+                response = new TextComponentString("Please pass an online players name into the first argument!");
             }
         }
 
