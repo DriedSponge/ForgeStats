@@ -30,10 +30,11 @@ public class StatsUploader {
             EntityPlayerMP player = (EntityPlayerMP) event.player;
             DriedSpongeStats.logger.info("Fetching data for "+name+"...");
             String UUID = player.getUniqueID().toString();
+
             Gson gson = new Gson();
-            Map<String, String> stats = new HashMap<String, String>();
-            stats.put("deaths",String.valueOf(player.getStatFile().readStat(StatList.DEATHS)));
+            Map<String, String> stats = new PlayerStats().stats(player);
             String finalstats = gson.toJson(stats);
+
             try{
                 Map<String,Object> params = new LinkedHashMap<>();
                 params.put("username", name);

@@ -12,14 +12,17 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 
+import java.util.Map;
+
 public class StatCommands extends CommandBase {
-    public static final String PLAYER_URL =ModConfig.CommandConfig.PlayerURL;
+    public static final String PLAYER_URL = ModConfig.CommandConfig.PlayerURL;
+
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] params) throws CommandException {
         TextComponentString response = new TextComponentString("Nothing to show!");
         if (sender instanceof EntityPlayerMP) {
             EntityPlayerMP player = (EntityPlayerMP) sender;
-            if (params.length == 1 ) {
+            if (params.length == 1) {
                 player = server.getPlayerList().getPlayerByUsername(params[0]);
                 if (player != null) {
                     response = PlayerStats(player);
@@ -31,7 +34,7 @@ public class StatCommands extends CommandBase {
                 response = PlayerStats(player);
             }
         } else {
-            if (params.length == 1 ) {
+            if (params.length == 1) {
                 EntityPlayerMP player = server.getPlayerList().getPlayerByUsername(params[0]);
                 if (player != null) {
                     response = PlayerStats(player);
@@ -39,7 +42,7 @@ public class StatCommands extends CommandBase {
                     response = new TextComponentString("The player was not found or the player is not online.");
                     response.getStyle().setBold(true).setColor(TextFormatting.RED);
                 }
-            }else{
+            } else {
                 response = new TextComponentString("Please pass an online players name into the first argument!");
             }
         }
@@ -62,7 +65,7 @@ public class StatCommands extends CommandBase {
         return "/info <player>";
     }
 
-    public static TextComponentString PlayerStats(EntityPlayerMP player){
+    public static TextComponentString PlayerStats(EntityPlayerMP player) {
         Style valueStyle = new Style();
         valueStyle.setColor(TextFormatting.GREEN);
         valueStyle.setBold(false);
@@ -75,25 +78,19 @@ public class StatCommands extends CommandBase {
         urlStyle.setColor(TextFormatting.AQUA);
         urlStyle.setBold(false);
         urlStyle.setUnderlined(true);
-        String url = PLAYER_URL.replace("{player_name}",player.getName());
-        urlStyle.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL,url));
-        urlStyle.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new TextComponentString("Click me to open "+url).setStyle(keyStyle)));
+        String url = PLAYER_URL.replace("{player_name}", player.getName());
+        urlStyle.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url));
+        urlStyle.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("Click me to open " + url).setStyle(keyStyle)));
 
-        int deaths = player.getStatFile().readStat(StatList.DEATHS);
-        int distancedTraveled = (player.getStatFile().readStat(StatList.WALK_ONE_CM) + player.getStatFile().readStat(StatList.SPRINT_ONE_CM))/100;
-        int anmialsBread = player.getStatFile().readStat(StatList.ANIMALS_BRED);
-
-        TextComponentString text = new TextComponentString("----- "+player.getName()+" Stats -----");
+        TextComponentString text = new TextComponentString("----- " + player.getName() + " Stats -----");
         text.getStyle().setColor(TextFormatting.GOLD).setBold(true);
 
-        text.appendSibling(new TextComponentString("\nDeaths: ").setStyle(keyStyle));
-        text.appendSibling(new TextComponentString(String.valueOf(deaths)).setStyle(valueStyle));
+        Map<String, String> stats = new PlayerStats().stats(player);
 
-        text.appendSibling(new TextComponentString("\nDistanced Traveled: ").setStyle(keyStyle));
-        text.appendSibling(new TextComponentString(distancedTraveled +" Blocks").setStyle(valueStyle));
-
-        text.appendSibling(new TextComponentString("\nAnimals Bread: ").setStyle(keyStyle));
-        text.appendSibling(new TextComponentString(String.valueOf(anmialsBread)).setStyle(valueStyle));
+        for (Map.Entry<String, String> entry : stats.entrySet()) {
+            text.appendSibling(new TextComponentString("\n" + entry.getKey() + ": ").setStyle(keyStyle));
+            text.appendSibling(new TextComponentString(entry.getValue()).setStyle(valueStyle));
+        }
 
         text.appendSibling(new TextComponentString("\nTo view more stats ").setStyle(keyStyle));
         text.appendSibling(new TextComponentString("click here!").setStyle(urlStyle));
