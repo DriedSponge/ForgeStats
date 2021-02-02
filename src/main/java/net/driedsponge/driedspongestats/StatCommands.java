@@ -12,8 +12,6 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 
-import java.security.Key;
-
 public class StatCommands extends CommandBase {
     public static final String PLAYER_URL =ModConfig.CommandConfig.PlayerURL;
     @Override
