@@ -9,8 +9,13 @@ import net.minecraft.stats.StatList;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
+
+import java.security.Key;
 
 public class StatCommands extends CommandBase {
+    public static final String PLAYER_URL =ModConfig.CommandConfig.PlayerURL;
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] params) throws CommandException {
         TextComponentString response = new TextComponentString("Nothing to show!");
@@ -68,6 +73,14 @@ public class StatCommands extends CommandBase {
         keyStyle.setColor(TextFormatting.GOLD);
         keyStyle.setBold(false);
 
+        Style urlStyle = new Style();
+        urlStyle.setColor(TextFormatting.AQUA);
+        urlStyle.setBold(false);
+        urlStyle.setUnderlined(true);
+        String url = PLAYER_URL.replace("{player_name}",player.getName());
+        urlStyle.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL,url));
+        urlStyle.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new TextComponentString("Click me to open "+url).setStyle(keyStyle)));
+
         int deaths = player.getStatFile().readStat(StatList.DEATHS);
         int distancedTraveled = (player.getStatFile().readStat(StatList.WALK_ONE_CM) + player.getStatFile().readStat(StatList.SPRINT_ONE_CM))/100;
         int anmialsBread = player.getStatFile().readStat(StatList.ANIMALS_BRED);
@@ -83,6 +96,9 @@ public class StatCommands extends CommandBase {
 
         text.appendSibling(new TextComponentString("\nAnimals Bread: ").setStyle(keyStyle));
         text.appendSibling(new TextComponentString(String.valueOf(anmialsBread)).setStyle(valueStyle));
+
+        text.appendSibling(new TextComponentString("\nTo view more stats ").setStyle(keyStyle));
+        text.appendSibling(new TextComponentString("click here!").setStyle(urlStyle));
 
         return text;
     }

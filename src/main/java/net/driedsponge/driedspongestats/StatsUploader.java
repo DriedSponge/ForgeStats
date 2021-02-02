@@ -2,14 +2,10 @@ package net.driedsponge.driedspongestats;
 
 import com.google.gson.Gson;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.stats.StatBase;
 import net.minecraft.stats.StatList;
-import net.minecraft.util.TupleIntJsonSerializable;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.lwjgl.Sys;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -22,14 +18,10 @@ import java.util.Map;
 
 
 public class StatsUploader {
-    @Config(modid = DriedSpongeStats.MODID)
-    public static class StatsUploadConfig{
-        public static String ApiURL = "http://localhost:3200/api/mc/stats/52";
-        public static String TOKEN = "TOKEN";
 
-    }
-    public String ApiURL = StatsUploadConfig.ApiURL;
-    public String TOKEN = StatsUploadConfig.TOKEN;
+    public static final String ApiURL = ModConfig.ApiConfig.ApiURL;
+    public static final String TOKEN = ModConfig.ApiConfig.TOKEN;
+
     private static HttpURLConnection connection;
     @SubscribeEvent
     public void postStats(PlayerEvent.PlayerLoggedOutEvent event){
