@@ -10,8 +10,6 @@ import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 
-import javax.xml.soap.Text;
-
 public class StatCommands extends CommandBase {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] params) throws CommandException {
