@@ -65,6 +65,9 @@ public class StatsUploader {
 
                 if(ModConfig.ApiConfig.DEBUG){
                     DriedSpongeStats.logger.info(connection.getResponseMessage());
+                    DriedSpongeStats.logger.info("Stats: "+finalstats);
+                    DriedSpongeStats.logger.info("Player UUID: "+UUID);
+                    DriedSpongeStats.logger.info("Player Username: "+name);
                 }
 
                 DriedSpongeStats.logger.info("Api responded with "+status);
