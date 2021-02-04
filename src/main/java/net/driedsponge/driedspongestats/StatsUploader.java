@@ -28,77 +28,77 @@ public class StatsUploader {
 
     private static HttpURLConnection connection;
     @SubscribeEvent
-    public void postStats(PlayerEvent.PlayerLoggedOutEvent event){
+    public void playerLeave(PlayerEvent.PlayerLoggedOutEvent event){
         if(event.player instanceof EntityPlayerMP){
-            String name = event.player.getName();
-            EntityPlayerMP player = (EntityPlayerMP) event.player;
-            DriedSpongeStats.logger.info("Fetching data for "+name+"...");
-            String UUID = player.getUniqueID().toString();
+            postStats((EntityPlayerMP) event.player);
+        }
+    }
 
-            Gson gson = new Gson();
-            Map<String, String> stats = new PlayerStats(player).allStats();
-            String finalstats = gson.toJson(stats);
+    public void postStats(EntityPlayerMP player){
+        String name = player.getName();
+        DriedSpongeStats.logger.info("Fetching data for "+name+"...");
+        String UUID = player.getUniqueID().toString();
 
-            try{
+        Gson gson = new Gson();
+        Map<String, String> stats = new PlayerStats(player).allStats();
+        String finalstats = gson.toJson(stats);
 
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("username", name);
-                params.put("uuid", UUID);
-                params.put("stats", finalstats);
+        try{
 
-                String jsonInputString = gson.toJson(params);
+            Map<String, String> params = new HashMap<String, String>();
+            params.put("username", name);
+            params.put("uuid", UUID);
+            params.put("stats", finalstats);
 
+            String jsonInputString = gson.toJson(params);
 
-                DriedSpongeStats.logger.info("Posting stats for "+name+" to api..");
-                URL url = new URL(ApiURL);
-                connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("POST");
-                connection.setReadTimeout(5000);
-                connection.setReadTimeout(50000);
-                connection.setRequestProperty("Authorization","Bearer "+TOKEN);
-                connection.setRequestProperty("Content-Type", "application/json; utf-8");
-                connection.setRequestProperty("Accept", "application/json");
-                connection.setDoOutput(true);
+            DriedSpongeStats.logger.info("Posting stats for "+name+" to api..");
+            URL url = new URL(ApiURL);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setReadTimeout(5000);
+            connection.setReadTimeout(50000);
+            connection.setRequestProperty("Authorization","Bearer "+TOKEN);
+            connection.setRequestProperty("Content-Type", "application/json; utf-8");
+            connection.setRequestProperty("Accept", "application/json");
+            connection.setDoOutput(true);
 
-                try(OutputStream os = connection.getOutputStream()) {
-                    byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
-                    os.write(input, 0, input.length);
-                }
-
-                int status = connection.getResponseCode();
-
-                if(ModConfig.ApiConfig.DEBUG){
-                    String strCurrentLine;
-                    BufferedReader br;
-
-                    if(status >= 200 && status <= 299){
-                        br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                        while ((strCurrentLine = br.readLine()) != null) {
-                            DriedSpongeStats.logger.info(strCurrentLine);
-                        }
-                    }else{
-                        br = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
-                        while ((strCurrentLine = br.readLine()) != null) {
-                            DriedSpongeStats.logger.info(strCurrentLine);
-                        }
-                    }
-
-                    DriedSpongeStats.logger.info("Stats: "+finalstats);
-                    DriedSpongeStats.logger.info("Player UUID: "+UUID);
-                    DriedSpongeStats.logger.info("Player Username: "+name);
-                    DriedSpongeStats.logger.info("Entire JSON: "+jsonInputString);
-                }
-
-                DriedSpongeStats.logger.info("Api responded with "+status+" ("+connection.getResponseMessage()+")");
-                DriedSpongeStats.logger.info("Stats have been posted for "+name);
-
-            }catch (MalformedURLException e){
-                e.printStackTrace();
-            } catch (IOException e){
-                e.printStackTrace();
+            try(OutputStream os = connection.getOutputStream()) {
+                byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
+                os.write(input, 0, input.length);
             }
 
+            int status = connection.getResponseCode();
 
+            if(ModConfig.ApiConfig.DEBUG){
+                String strCurrentLine;
+                BufferedReader br;
+
+                if(status >= 200 && status <= 299){
+                    br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    while ((strCurrentLine = br.readLine()) != null) {
+                        DriedSpongeStats.logger.info(strCurrentLine);
+                    }
+                }else{
+                    br = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+                    while ((strCurrentLine = br.readLine()) != null) {
+                        DriedSpongeStats.logger.info(strCurrentLine);
+                    }
+                }
+
+                DriedSpongeStats.logger.info("Stats: "+finalstats);
+                DriedSpongeStats.logger.info("Player UUID: "+UUID);
+                DriedSpongeStats.logger.info("Player Username: "+name);
+                DriedSpongeStats.logger.info("Entire JSON: "+jsonInputString);
+            }
+
+            DriedSpongeStats.logger.info("Api responded with "+status+" ("+connection.getResponseMessage()+")");
+            DriedSpongeStats.logger.info("Stats have been posted for "+name);
+
+        }catch (MalformedURLException e){
+            e.printStackTrace();
+        }catch (IOException e){
+            e.printStackTrace();
         }
     }
 }
