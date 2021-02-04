@@ -85,7 +85,7 @@ public class StatCommands extends CommandBase {
         TextComponentString text = new TextComponentString("----- " + player.getName() + " Stats -----");
         text.getStyle().setColor(TextFormatting.GOLD).setBold(true);
 
-        Map<String, String> stats = new PlayerStats().stats(player);
+        Map<String, String> stats = new PlayerStats(player).basicStats();
 
         for (Map.Entry<String, String> entry : stats.entrySet()) {
             text.appendSibling(new TextComponentString("\n" + entry.getKey() + ": ").setStyle(keyStyle));

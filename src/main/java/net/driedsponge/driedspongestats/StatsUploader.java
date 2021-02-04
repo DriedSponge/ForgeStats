@@ -36,7 +36,7 @@ public class StatsUploader {
             String UUID = player.getUniqueID().toString();
 
             Gson gson = new Gson();
-            Map<String, String> stats = new PlayerStats().stats(player);
+            Map<String, String> stats = new PlayerStats(player).allStats();
             String finalstats = gson.toJson(stats);
 
             try{
