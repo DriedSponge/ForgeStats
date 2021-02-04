@@ -56,11 +56,19 @@ public class StatsUploader {
                 connection.setReadTimeout(5000);
                 connection.setReadTimeout(50000);
                 connection.setRequestProperty("Authorization","Bearer "+TOKEN);
+                connection.setRequestProperty("Content-Type", "multipart/form-data");
                 connection.setDoOutput(true);
+
                 connection.getOutputStream().write(postDataBytes);
+
                 int status = connection.getResponseCode();
+
+                if(ModConfig.ApiConfig.DEBUG){
+                    DriedSpongeStats.logger.info(connection.getResponseMessage());
+                }
+
                 DriedSpongeStats.logger.info("Api responded with "+status);
-                DriedSpongeStats.logger.info("Stats have been posted for"+name);
+                DriedSpongeStats.logger.info("Stats have been posted for "+name);
 
             }catch (MalformedURLException e){
                 e.printStackTrace();

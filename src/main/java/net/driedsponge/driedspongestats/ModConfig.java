@@ -15,6 +15,11 @@ public class ModConfig {
                 "It will be sent in the header as a Bearer token (Authorization: Bearer <TOKEN>)"
         })
         public static String TOKEN = "TOKEN";
+
+        @Config.Comment({
+                "Output http debug into the console (May be dangerous)"
+        })
+        public static Boolean DEBUG = false;
     }
 
     @Config(modid = DriedSpongeStats.MODID, category = "command_settings")
